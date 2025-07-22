@@ -1,0 +1,37 @@
+name: 'Jira Issue Transition'
+description: 'Transition Jira issue from PR title to a specific Jira status using a custom pattern.'
+author: 'sydque'
+
+inputs:
+  jira-base-url:
+    description: 'Base URL of your Jira instance (e.g. https://yourcompany.atlassian.net)'
+    required: true
+  jira-user-email:
+    description: 'Email of the Jira user'
+    required: true
+  jira-api-token:
+    description: 'API token for Jira authentication'
+    required: true
+  jira-transition-id:
+    description: 'The Jira transition ID for the target status'
+    required: true
+  github-token:
+    description: 'GitHub Token to fetch PR information'
+    required: true
+  issue-key-pattern:
+    description: 'Regex pattern to extract issue key from PR title (e.g. [A-Z]+-[0-9]+)'
+    required: true
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Run Jira transition script
+      shell: bash
+      run: ./entrypoint.sh
+      env:
+        JIRA_BASE_URL: ${{ inputs.jira-base-url }}
+        JIRA_USER_EMAIL: ${{ inputs.jira-user-email }}
+        JIRA_API_TOKEN: ${{ inputs.jira-api-token }}
+        TRANSITION_ID: ${{ inputs.jira-transition-id }}
+        GITHUB_TOKEN: ${{ inputs.github-token }}
+        ISSUE_KEY_PATTERN: ${{ inputs.issue-key-pattern }}
