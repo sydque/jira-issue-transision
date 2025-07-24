@@ -28,7 +28,7 @@ runs:
     - name: Run Jira transition script
       shell: bash
       run: |
-        "${{ github.action_path }}/nashkah/titik-masuk.sh"
+        "${{ github.action_path }}/naskah/titik-masuk.sh"
       env:
         JIRA_BASE_URL: ${{ inputs.jira-base-url }}
         JIRA_USER_EMAIL: ${{ inputs.jira-user-email }}
