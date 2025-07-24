@@ -4,7 +4,7 @@ set -e
 REPO="${GITHUB_REPOSITORY}"
 REF_NAME="${GITHUB_REF_NAME}"
 
-echo "📦 Fetching PR title from branch: $REF_NAME"
+echo "📦 Fetching Pull Request title from branch: $REF_NAME"
 
 # Fetch all PRs
 PR_JSON=$(curl -s -H "Authorization: Bearer $GITHUB_TOKEN" \
@@ -19,21 +19,22 @@ echo "$PR_JSON" | jq -r '.[] | "- \(.head.ref): \(.title)"'
 PR_TITLE=$(echo "$PR_JSON" | jq -r ".[] | select(.head.ref == \"$REF_NAME\") | .title" | head -n 1)
 
 if [[ -z "$PR_TITLE" ]]; then
-  echo "❗ No PR found for branch '$REF_NAME'. Make sure this branch has an open PR."
-  exit 1
+  echo "⚠️ No Pull Request found for branch '$REF_NAME'. Skipping Jira transition."
+  exit 0
 fi
 
 echo "✅ Using PR Title: $PR_TITLE"
+
 
 # Use provided pattern to extract issue key
 ISSUE_KEY=$(echo "$PR_TITLE" | grep -oE "$ISSUE_KEY_PATTERN")
 
 if [[ -z "$ISSUE_KEY" ]]; then
-  echo "❗ No issue key found matching pattern '$ISSUE_KEY_PATTERN'."
+  echo "❗ No Issue ID found matching pattern '$ISSUE_KEY_PATTERN'."
   exit 0
 fi
 
-echo "🔑 Found issue key: $ISSUE_KEY"
+echo "🔑 Found Issue ID: $ISSUE_KEY"
 
 # Perform the transition
 echo "🔄 Transitioning $ISSUE_KEY using transition ID: $TRANSITION_ID"
