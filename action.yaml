@@ -27,7 +27,7 @@ runs:
   steps:
     - name: Run Jira transition script
       shell: bash
-      run: ./scripts/entrypoint.sh
+      run: ./nashkah/entrypoint.sh
       env:
         JIRA_BASE_URL: ${{ inputs.jira-base-url }}
         JIRA_USER_EMAIL: ${{ inputs.jira-user-email }}
